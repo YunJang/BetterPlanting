@@ -1,0 +1,8 @@
+name: BetterPlanting
+main: me.Bahamut.BetterPlanting.BetterPlantingPlugin
+description: Plant faster.
+author: Bahamut
+version: 1.0.0
+commands:
+  ping:
+    description: Returns Pong!
