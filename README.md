@@ -1,6 +1,6 @@
 # BetterPlanting - 1.8.x
 
-Current Version: 1.1.1
+Current Version: 1.1.2
 
 Written for our personal Minecraft server that is running Spigot 1.8.x. Spigot 1.8.1 API was used but it should work as long as Minecraft remains on version 1.8.
 
@@ -16,11 +16,12 @@ Features:
 	- Nether Wart
 
 To-Do:
-- Plant remainder of seeds even if you have less than the radius by radius amount (e.g. 81 seeds for 9x9), you should still just plant the remainder.
-    - But this must be done without checking your inventory after each seed is planted (otherwise it'll be pretty expensive)!
 - Reduce durability of the hoes based on number of seeds planted.
 
 Changelog:
+- Version 1.1.2
+    - Seeds now plant until exhausted.
+        - Server overhead for this is low since it involves only a single inventory check rather than updating your inventory for every seed planted.
 - Version 1.1.1
     - Fixed the issue where it would fail to deduct the correct amount of seeds.
 - Version 1.1.0

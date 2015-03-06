@@ -47,24 +47,22 @@ public class BetterPlantingBlockListener implements Listener
 
         // Check player's inventory and plant based on tool's radius.
         int totalSeedsRemaining = getTotalItemStack (player, seed);
-        if (player.getInventory().contains(seed, radius*radius))
+        if (player.getInventory().contains(seed))
         {
             int numSeeds = 1;
-            for (double x = -Math.floor(radius/2.0); x < Math.ceil(radius/2.0); ++x)
+            plantingIteration:
+            for (int x = (int) -Math.floor(radius/2.0); x < (int) Math.ceil(radius/2.0); ++x)
             {
-                for (double z = -Math.floor(radius/2.0); z < Math.ceil(radius/2.0); ++z)
+                for (int z = (int) -Math.floor(radius/2.0); z < (int) Math.ceil(radius/2.0); ++z)
                 {
-                    // Since we are planting at the (x, z) coordinate already anyway.
-                    if (x != 0 || z != 0)
+                    Block soilBlocks = block.getRelative(x, -1, z);
+                    Block airBlocks = block.getRelative(x, 0, z);
+                    if (soilBlocks.getType() == Material.SOIL && airBlocks.getType() == Material.AIR)
                     {
-                        Block soilBlocks = block.getRelative((int) x, -1, (int) z);
-                        Block airBlocks = block.getRelative((int) x, 0, (int) z);
-                        if (soilBlocks.getType() == Material.SOIL && airBlocks.getType() == Material.AIR)
-                        {
-                            airBlocks.setType(crop);
-                            ++numSeeds;
-                        }
+                        airBlocks.setType(crop);
+                        ++numSeeds;
                     }
+                    if (numSeeds >= totalSeedsRemaining) break plantingIteration;
                 }
             }
             removeSeeds (player, seed, numSeeds);
@@ -80,14 +78,8 @@ public class BetterPlantingBlockListener implements Listener
         int totalSeeds = 0;
         ItemStack[] inventorySlot = player.getInventory().getContents();
         for (int x = 0; x < inventorySlot.length; ++x)
-        {
             if (inventorySlot[x] != null && inventorySlot[x].getType() == seed)
-            {
                 totalSeeds += inventorySlot[x].getAmount();
-                log.info("Amount: " + inventorySlot[x].getAmount());
-            }
-        }
-        log.info ("Total Seeds: " + totalSeeds);
         return totalSeeds;
     }
 
