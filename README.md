@@ -16,6 +16,8 @@ Features:
 	- Nether Wart
 
 To-Do:
+- Plant remainder of seeds even if you have less than the radius by radius amount (e.g. 81 seeds for 9x9), you should still just plant the remainder.
+    - But this must be done without checking your inventory after each seed is planted (otherwise it'll be pretty expensive)!
 - Reduce durability of the hoes based on number of seeds planted.
 
 Changelog:

@@ -13,6 +13,8 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 
+import java.util.HashMap;
+
 public class BetterPlantingBlockListener implements Listener
 {
     public BetterPlantingPlugin plugin;
@@ -44,6 +46,7 @@ public class BetterPlantingBlockListener implements Listener
         else                                    return;
 
         // Check player's inventory and plant based on tool's radius.
+        int totalSeedsRemaining = getTotalItemStack (player, seed);
         if (player.getInventory().contains(seed, radius*radius))
         {
             int numSeeds = 1;
@@ -66,6 +69,26 @@ public class BetterPlantingBlockListener implements Listener
             }
             removeSeeds (player, seed, numSeeds);
         }
+    }
+
+    /*
+        Goes through the player's inventory and totals up how many seeds they have.
+        Returns the total number of seeds.
+     */
+    public int getTotalItemStack (Player player, Material seed)
+    {
+        int totalSeeds = 0;
+        ItemStack[] inventorySlot = player.getInventory().getContents();
+        for (int x = 0; x < inventorySlot.length; ++x)
+        {
+            if (inventorySlot[x] != null && inventorySlot[x].getType() == seed)
+            {
+                totalSeeds += inventorySlot[x].getAmount();
+                log.info("Amount: " + inventorySlot[x].getAmount());
+            }
+        }
+        log.info ("Total Seeds: " + totalSeeds);
+        return totalSeeds;
     }
 
     public void removeSeeds (Player player, Material seed, int numSeeds)
