@@ -30,9 +30,9 @@ public class BetterPlantingPlugin extends JavaPlugin
 
     public boolean onCommand (CommandSender sender, Command cmd, String s, String[] args)
     {
-        if (cmd.getName().equalsIgnoreCase("ping"))
+        if (cmd.getName().equalsIgnoreCase("author"))
         {
-            sender.sendMessage("pong!");
+            sender.sendMessage("Made by Yun - https://github.com/YunJang/BetterPlanting");
             return true;
         }
         return false;

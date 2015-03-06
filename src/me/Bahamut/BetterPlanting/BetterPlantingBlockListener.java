@@ -70,15 +70,23 @@ public class BetterPlantingBlockListener implements Listener
 
     public void removeSeeds (Player player, Material seed, int numSeeds)
     {
-        int itemIndex = player.getInventory().first(seed);
-        int itemStackSize = player.getInventory().getItem(itemIndex).getAmount();
-        ItemStack itemStack = player.getInventory().getItem(itemIndex);
+        int counterSeeds = numSeeds;
+        while (counterSeeds > 0)
+        {
+            // Check to see if you have enough ItemStacks of the material.
+            int itemIndex = player.getInventory().first(seed);
+            if (itemIndex < 0) return;
 
-        // Ternary the deduction of the item stack size. Not a good idea to set the item stack size to negative.
-        int newItemStackSize = (itemStackSize - numSeeds > 0) ? itemStackSize - numSeeds : 0;
-        itemStack.setAmount(newItemStackSize);
-        player.getInventory().setItem(itemIndex, itemStack);
-        player.updateInventory();
+            ItemStack itemStack = player.getInventory().getItem(itemIndex);
+            int itemStackSize = itemStack.getAmount();
+
+            // Ternary the deduction of the item stack size. Not a good idea to set the item stack size to negative.
+            int newItemStackSize = (itemStackSize - counterSeeds > 0) ? itemStackSize - counterSeeds : 0;
+            counterSeeds -= itemStackSize;
+            itemStack.setAmount(newItemStackSize);
+            player.getInventory().setItem(itemIndex, itemStack);
+            player.updateInventory();
+        }
     }
 
     /*
