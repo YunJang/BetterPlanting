@@ -10,6 +10,7 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 
 public class BetterPlantingBlockListener implements Listener
@@ -27,10 +28,9 @@ public class BetterPlantingBlockListener implements Listener
     @EventHandler
     public void onBlockPlace (BlockPlaceEvent event)
     {
-        // Some people might not even like mod and enjoy planting 1x1. A config toggle might be convenient.
-
-        // Get the player invoking the event.
         Player player = event.getPlayer();
+        int radius = checkHoesInventory(player);
+        if (radius <= 0) return;
 
         // Get the block that the player is invoking the event with.
         Block block = event.getBlock();
@@ -43,21 +43,19 @@ public class BetterPlantingBlockListener implements Listener
         else if (crop == Material.NETHER_WARTS) seed = Material.NETHER_WARTS;
         else                                    return;
 
-        // Check player's inventory and plant in a 3x3 if they have enough.
-        if (player.getInventory().contains(seed, 8))
+        // Check player's inventory and plant based on tool's radius.
+        if (player.getInventory().contains(seed, radius*radius))
         {
             int numSeeds = 1;
-
-            // This needs to be reworked to be modular.
-            for (int x = -1; x < 2; ++x)
+            for (double x = -Math.floor(radius/2.0); x < Math.ceil(radius/2.0); ++x)
             {
-                for (int z = -1; z < 2; ++z)
+                for (double z = -Math.floor(radius/2.0); z < Math.ceil(radius/2.0); ++z)
                 {
                     // Since we are planting at the (x, z) coordinate already anyway.
                     if (x != 0 || z != 0)
                     {
-                        Block soilBlocks = block.getRelative(x, -1, z);
-                        Block airBlocks = block.getRelative(x, 0, z);
+                        Block soilBlocks = block.getRelative((int) x, -1, (int) z);
+                        Block airBlocks = block.getRelative((int) x, 0, (int) z);
                         if (soilBlocks.getType() == Material.SOIL && airBlocks.getType() == Material.AIR)
                         {
                             airBlocks.setType(crop);
@@ -81,5 +79,19 @@ public class BetterPlantingBlockListener implements Listener
         itemStack.setAmount(newItemStackSize);
         player.getInventory().setItem(itemIndex, itemStack);
         player.updateInventory();
+    }
+
+    /*
+        Check if the player has an Iron, Golden, or Diamond Hoe.
+        Returns the radius depending on the material-level of the hoe.
+        If not, then return 0 and the onBlockPlace event will be ignored.
+     */
+    public int checkHoesInventory (Player player)
+    {
+        Inventory playerInventory = player.getInventory();
+        if (playerInventory.contains(Material.DIAMOND_HOE))     return 9;
+        else if (playerInventory.contains(Material.GOLD_HOE))   return 6;
+        else if (playerInventory.contains(Material.IRON_HOE))   return 3;
+        else                                                    return 0;
     }
 }
