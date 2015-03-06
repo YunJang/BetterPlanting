@@ -1,6 +1,6 @@
 # BetterPlanting - 1.8.x
 
-Current Version: 1.1.2
+Current Version: 1.1.3
 
 Written for our personal Minecraft server that is running Spigot 1.8.x. Spigot 1.8.1 API was used but it should work as long as Minecraft remains on version 1.8.
 
@@ -13,12 +13,12 @@ Features:
 	- Wheat
 	- Carrot
 	- Potato
-	- Nether Wart
-
-To-Do:
-- Reduce durability of the hoes based on number of seeds planted.
 
 Changelog:
+- Version 1.1.3
+    - Carrots and Potatos now plant properly.
+    - Hoes will now take damage based on how many seeds you plant (formula: durability reduced by number of seeds planted / 8).
+    - Nether Wart planting removed for now.
 - Version 1.1.2
     - Seeds now plant until exhausted.
         - Server overhead for this is low since it involves only a single inventory check rather than updating your inventory for every seed planted.

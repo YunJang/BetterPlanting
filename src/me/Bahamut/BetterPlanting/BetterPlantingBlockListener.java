@@ -12,6 +12,7 @@ import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.material.MaterialData;
 
 import java.util.HashMap;
 
@@ -40,8 +41,8 @@ public class BetterPlantingBlockListener implements Listener
         Material crop = block.getType();
         Material seed;
         if      (crop == Material.CROPS)        seed = Material.SEEDS;
-        else if (crop == Material.CARROT)       seed = Material.CARROT;
-        else if (crop == Material.POTATO)       seed = Material.POTATO;
+        else if (crop == Material.CARROT)       seed = Material.CARROT_ITEM;
+        else if (crop == Material.POTATO)       seed = Material.POTATO_ITEM;
         else if (crop == Material.NETHER_WARTS) seed = Material.NETHER_WARTS;
         else                                    return;
 
@@ -66,6 +67,7 @@ public class BetterPlantingBlockListener implements Listener
                 }
             }
             removeSeeds (player, seed, numSeeds);
+            applyDamage (player, numSeeds);
         }
     }
 
@@ -81,6 +83,32 @@ public class BetterPlantingBlockListener implements Listener
             if (inventorySlot[x] != null && inventorySlot[x].getType() == seed)
                 totalSeeds += inventorySlot[x].getAmount();
         return totalSeeds;
+    }
+
+    /*
+        Decrement the tool's durability and break it if it is past its durability limit.
+     */
+    public void applyDamage (Player player, int numSeeds)
+    {
+        int index = -1;
+        ItemStack tool = null;
+        Material[] hoeTools = { Material.DIAMOND_HOE, Material.GOLD_HOE, Material.IRON_HOE };
+        for (int i = 0; i < hoeTools.length; ++i)
+        {
+            index = player.getInventory().first(hoeTools[i]);
+            if (index >= 0)
+            {
+                tool = player.getInventory().getItem(index);
+                if (tool != null) break;
+            }
+        }
+
+        Material toolMaterial = tool.getData().getItemType();
+        int maxDurability = toolMaterial.getMaxDurability();
+        tool.setDurability((short) (tool.getDurability() + (numSeeds/8)));
+        int currentDurability = tool.getDurability();
+        if (currentDurability >= maxDurability) player.getInventory().clear(index);
+        player.updateInventory();
     }
 
     public void removeSeeds (Player player, Material seed, int numSeeds)

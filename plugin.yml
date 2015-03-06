@@ -2,7 +2,7 @@ name: BetterPlanting
 main: me.Bahamut.BetterPlanting.BetterPlantingPlugin
 description: Plant faster.
 author: Bahamut
-version: 1.1.2
+version: 1.1.3
 commands:
   author:
     description: Gets the author of the plugin and the link to GitHub for the source code.
