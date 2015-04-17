@@ -1,0 +1,33 @@
+#Holds information on what crops are BetterPlantable
+PlantableCrops:
+  - CROPS
+  - CARROT_ITEM
+  - POTATO_ITEM
+  - NETHER_WARTS
+
+#Contains what tools are usable with plugin and how large of a planting size by radius
+BetterPlantableTools:
+  tool1:
+    Material: DIAMOND_HOE
+    PlantSize: 9
+  tool2:
+    Material: GOLD_HOE
+    PlantSize: 6
+  tool3:
+    Material: IRON_HOE
+    PlantSize: 3
+
+#DO NOT EDIT BEYOND THIS LINE
+CropToSeed:
+  crop1:
+    - CROPS
+    - SEEDS
+  crop2:
+    - CARROT
+    - CARROT_ITEM
+  crop3:
+    - POTATO
+    - POTATO_ITEM
+  crop4:
+    - NETHER_WARTS
+    - NETHER_WARTS

@@ -12,9 +12,6 @@ import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.material.MaterialData;
-
-import java.util.HashMap;
 
 public class BetterPlantingBlockListener implements Listener
 {
@@ -40,11 +37,10 @@ public class BetterPlantingBlockListener implements Listener
 
         Material crop = block.getType();
         Material seed;
-        if      (crop == Material.CROPS)        seed = Material.SEEDS;
-        else if (crop == Material.CARROT)       seed = Material.CARROT_ITEM;
-        else if (crop == Material.POTATO)       seed = Material.POTATO_ITEM;
-        else if (crop == Material.NETHER_WARTS) seed = Material.NETHER_WARTS;
-        else                                    return;
+        if (plugin.PlantableCrops.contains(crop))
+            seed = plugin.CropToSeed.get(crop);
+        else
+            return;
 
         // Check player's inventory and plant based on tool's radius.
         int totalSeedsRemaining = getTotalItemStack (player, seed);
@@ -79,9 +75,10 @@ public class BetterPlantingBlockListener implements Listener
     {
         int totalSeeds = 0;
         ItemStack[] inventorySlot = player.getInventory().getContents();
-        for (int x = 0; x < inventorySlot.length; ++x)
-            if (inventorySlot[x] != null && inventorySlot[x].getType() == seed)
-                totalSeeds += inventorySlot[x].getAmount();
+        for (ItemStack item : inventorySlot) {
+            if (item != null && item.getType() == seed)
+                totalSeeds += item.getAmount();
+        }
         return totalSeeds;
     }
 
@@ -93,9 +90,9 @@ public class BetterPlantingBlockListener implements Listener
         int index = -1;
         ItemStack tool = null;
         Material[] hoeTools = { Material.DIAMOND_HOE, Material.GOLD_HOE, Material.IRON_HOE };
-        for (int i = 0; i < hoeTools.length; ++i)
+        for (Material hoe : hoeTools)
         {
-            index = player.getInventory().first(hoeTools[i]);
+            index = player.getInventory().first(hoe);
             if (index >= 0)
             {
                 tool = player.getInventory().getItem(index);
@@ -140,9 +137,14 @@ public class BetterPlantingBlockListener implements Listener
     public int checkHoesInventory (Player player)
     {
         Inventory playerInventory = player.getInventory();
-        if (playerInventory.contains(Material.DIAMOND_HOE))     return 9;
-        else if (playerInventory.contains(Material.GOLD_HOE))   return 6;
-        else if (playerInventory.contains(Material.IRON_HOE))   return 3;
-        else                                                    return 0;
+
+        if (playerInventory.contains(Material.DIAMOND_HOE))
+            return plugin.Tools.get(Material.DIAMOND_HOE);
+        else if (playerInventory.contains(Material.GOLD_HOE))
+            return plugin.Tools.get(Material.GOLD_HOE);
+        else if (playerInventory.contains(Material.IRON_HOE))
+            return plugin.Tools.get(Material.IRON_HOE);
+        else
+            return 0;
     }
 }
